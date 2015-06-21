@@ -5,12 +5,21 @@
 #include <glib.h>
 #include <gtk/gtk.h>
 
-typedef struct _HTMLGtkDocument {
 
+typedef	struct factory_element {
+	unsigned	type;
+	GumboNode*	gumbo_node; // g&l
+	GtkWidget	*widget, *parent_widget, *orig_widget;
+} factory_element_t;
+
+typedef struct _HTMLGtkDocument {
+	factory_element_t*	body;
+//	GtkCSSProvider*		style;
 } HTMLGtkDocument;
 
 typedef struct _HTMLGtkFactory {
 	// document list
+	//TODO: duk context;
 } HTMLGtkFactory;
 
 //HTMLGtkDocument*
@@ -19,11 +28,6 @@ typedef struct _HTMLGtkFactory {
 GtkWidget*
 HTMLGtkFactory_get_body(/* HTMLGtkDocument* doc*/);
 
-typedef	struct factory_element {
-	unsigned	type;
-	GumboNode*	gumbo_node;
-	GtkWidget	*widget, *parent_widget, *orig_widget;
-} factory_element_t;
 
 /* create GTK implementation of HTML node */
 void

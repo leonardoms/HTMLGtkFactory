@@ -1,0 +1,46 @@
+#h1 {
+	font-size: 24px;
+}
+
+#h2 {
+	font-size: 20px;
+}
+
+
+#h3 {
+	font-size: 16px;
+}
+
+#h4 {
+	font-size: 12px;
+}
+
+#h5 {
+	font-size: 8px;
+}
+
+#redlabel {
+	color: #ff0000;
+	font: Comic Sans 12;
+}
+
+#bluebutton { 
+	border-image: none; 
+	background-image: none;
+	background-color: #0000FF;
+	color: #FAFAFA
+}
+
+
+#rowspan_test {
+	background-color: #00FFFF;
+}
+
+#colspan_test {
+	background-color: #FF00FF;
+}
+
+#td {
+
+}
+

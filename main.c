@@ -11,17 +11,16 @@ static void	process_node(GumboNode* node, int back) {
 		if( !back ) 
 			implement_node(node); // process node!
 
-//		if( (node->type == GUMBO_NODE_TEXT) && !back ) {
-//			//FIXME: Se tem irmao, processar ele!
-//			process_node(node->parent, 1); // child is not a element (is Text)
-//		} else
-		if( node->type != GUMBO_NODE_TEXT ) {
+		if( node->type != GUMBO_NODE_TEXT && node->type != GUMBO_NODE_WHITESPACE &&
+		    node->type != GUMBO_NODE_CDATA && node->type != GUMBO_NODE_COMMENT &&
+		    node->type != GUMBO_NODE_TEMPLATE ) {
 			if( (node->v.element.children.length > 0) && !back ) { 	// have Childs?
 				process_node(node->v.element.children.data[0], 0); // process first Child
+				return;
 			}
 		}
 
-		if( node->parent->v.element.children.length > node->index_within_parent+1 && !back  ) { // Parent have more Childs?
+		if( node->parent->v.element.children.length > node->index_within_parent+1 ) { // Parent have more Childs?
 			process_node(node->parent->v.element.children.data[node->index_within_parent+1], 0);
 		}
 		else
@@ -29,7 +28,8 @@ static void	process_node(GumboNode* node, int back) {
 
 		return;
 
-	} else return;
+	} else
+	return;
 }
 
 int
@@ -38,7 +38,30 @@ main(int argc, char* argv[]) {
 	gtk_init(&argc, &argv);
 
 	GumboOutput* output = gumbo_parse(
-		"<html><head></head><body>Lorem Ipsum...<button>MyButton</button>HTMLGtkFactory<br/>Second line: <button>Button 2!</button><br/><br/><p>Using basic <p>HTML for</p></p><p>GTK 3.0 Programming!</p></body></html>");
+		"<html>"
+		"<head>"
+		"	<link rel=\"stylesheet\" href=\"test/default.css\">"
+		"</head>"
+		"<body>"
+		"<h1>Main Heading Topic</h1>"
+		"<h2>This is a Subtopic</h2>"
+		"<br/>"
+		"<table>"
+		"	<tr>"
+		"		<td></td><td>Col#1</td><td>Col#2</td><td>Col#3</td>"
+		"	</tr>"
+		"	<tr>"
+		"		<td>Row#1</td><td colspan=\"2\" name=\"colspan_test\"><button>A1 + B1</button></td><td><button>C1</button></td>"
+		"	</tr>"
+		"	<tr>"
+		"		<td>Row#2</td><td><button>A2</button></td><td><button>B2</button></td><td name=\"rowspan_test\" rowspan=\"2\"><button>C2</button></td>"
+		"	</tr>"
+		"	<tr>"
+		"		<td>Row#2</td><td><button>A3</button></td><td><button>B3</button></td>" //<td><button>C3</button></td>"
+		"	</tr>"
+		"</table>"
+		"</body>"
+		"</html>" );
 
 	tree_init();
 	process_node(output->root, 0);
