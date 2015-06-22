@@ -1,7 +1,7 @@
 
 C_SOURCE = 	src/htmlgtk_document.c	\
 		src/htmlgtk_factory.c	\
-		src/main.c		\
+		test/main.c		\
 		src/process_node.c	\
 		src/element/el_a.c	\
 		src/element/el_input.c	\
