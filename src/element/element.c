@@ -171,8 +171,8 @@ glue_node(GNode* node) {
 }
 
 void
-implement_node(GumboNode* gumbo_node) {
-	g_print("implement_node -> %s\n", gumbo_normalized_tagname(gumbo_node->v.element.tag));
+element_create(GumboNode* gumbo_node) {
+	// g_print("implement_node -> %s\n", gumbo_normalized_tagname(gumbo_node->v.element.tag));
 	factory_element_t* el = g_malloc0(sizeof(factory_element_t));
 	factory_element_t* el_tmp;
 	GNode *parent, *this_node;
@@ -272,7 +272,7 @@ implement_node(GumboNode* gumbo_node) {
 				case GUMBO_TAG_BUTTON:
 					el->orig_widget = el_button(el);
 					break;
-				case GUMBO_TAG_P:		
+				case GUMBO_TAG_P:	
 				case GUMBO_TAG_H1:
 				case GUMBO_TAG_H2:
 				case GUMBO_TAG_H3:
@@ -280,6 +280,12 @@ implement_node(GumboNode* gumbo_node) {
 				case GUMBO_TAG_H5:
 					el->orig_widget = el_p(el);
 					HTMLGtkFactory_newline(/*el*/body_element);
+					break;
+				case GUMBO_TAG_I:
+				case GUMBO_TAG_B:
+				case GUMBO_TAG_STRONG:	
+				case GUMBO_TAG_SMALL:
+					el_text(el);
 					break;
 				default:
 					g_warning("unsuported or invalid tag (%s)", gumbo_normalized_tagname(gumbo_node->v.element.tag));
@@ -310,6 +316,8 @@ implement_node(GumboNode* gumbo_node) {
 	if( (parent != NULL) && (el != body_element) ) {
 		tree_add_node( parent, this_node);
 		el->parent_widget = ((factory_element_t*)parent->data)->widget;
+	
+		element_attributes_read( el );
 		glue_node( this_node );
 	} else
 		tree_add_node( WidgetTree, this_node);

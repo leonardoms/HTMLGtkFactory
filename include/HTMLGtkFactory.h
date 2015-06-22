@@ -4,13 +4,7 @@
 #include <gumbo.h>
 #include <glib.h>
 #include <gtk/gtk.h>
-
-
-typedef	struct factory_element {
-	unsigned	type;
-	GumboNode*	gumbo_node; // g&l
-	GtkWidget	*widget, *parent_widget, *orig_widget;
-} factory_element_t;
+#include "element.h"
 
 typedef struct _HTMLGtkDocument {
 	factory_element_t*	body;
@@ -31,9 +25,9 @@ HTMLGtkFactory_get_body(/* HTMLGtkDocument* doc*/);
 
 /* create GTK implementation of HTML node */
 void
-implement_node(GumboNode*);
+process_node(GumboNode*, int back);
 
 void
-tree_init();
+tree_init(); // TODO: remove this
 
 #endif
