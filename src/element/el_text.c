@@ -1,5 +1,5 @@
 
-#include "HTMLGtkFactory.h"
+#include <HTMLGtkFactory.h>
 
 GtkWidget*
 el_text(factory_element_t* el) {
@@ -11,6 +11,7 @@ el_text(factory_element_t* el) {
 	text = GTK_WIDGET(gtk_label_new(el->gumbo_node->v.text.text));
 
 	el->widget = text;
+	el->orig_widget = el->widget;
 
 	return text;
 }

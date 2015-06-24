@@ -22,6 +22,11 @@ typedef struct _HTMLGtkFactory {
 GtkWidget*
 HTMLGtkFactory_get_body(/* HTMLGtkDocument* doc*/);
 
+factory_element_t*
+HTMLGtkFactory_get_el_body();
+
+GtkWidget*
+HTMLGtkFactory_newline(factory_element_t*);
 
 /* create GTK implementation of HTML node */
 void

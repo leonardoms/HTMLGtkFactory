@@ -9,6 +9,7 @@ typedef	struct factory_element {
 	unsigned	type;
 	GumboNode*	gumbo_node; // g&l
 	GtkWidget	*widget, *parent_widget, *orig_widget;
+	void		(*post_create)(struct factory_element*);
 } factory_element_t;
 
 // create html element on GTK interface.

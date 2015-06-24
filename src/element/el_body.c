@@ -9,6 +9,7 @@ el_body(factory_element_t* el) {
 	gtk_box_set_homogeneous( GTK_BOX(body), FALSE );
 
 	el->widget = body;
+	el->orig_widget = el->widget;
 
 	return body;
 }

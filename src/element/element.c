@@ -3,7 +3,7 @@
 #include <glib.h>
 
 GNode *WidgetTree;
-static GtkWidget* doc_body, *body_row;
+static GtkWidget*  body_row;
 factory_element_t* body_element; // user for glue widgets on corret row!
 
 GtkStyleContext* style_ctx;
@@ -12,7 +12,6 @@ GtkStyleContext* style_ctx;
 void
 tree_init() {
 	WidgetTree = g_node_new(g_malloc0(sizeof(factory_element_t)));
-	doc_body = NULL;
 	body_row = NULL;
 	body_element = NULL;
 
@@ -21,8 +20,14 @@ tree_init() {
 
 GtkWidget*
 HTMLGtkFactory_get_body() {
-	g_return_if_fail( body_element != NULL ); 
+	g_return_val_if_fail( body_element != NULL, NULL ); 
 	return body_element->orig_widget;
+}
+
+factory_element_t*
+HTMLGtkFactory_get_el_body() {
+//	g_return_if_fail( body_element != NULL ); 
+	return body_element;
 }
 
 GtkWidget*
@@ -58,6 +63,19 @@ find_gumbo(GNode *node, gpointer data) {
 		return FALSE;
 }
 
+gboolean
+find_gtk(GNode *node, gpointer data) {
+
+	factory_element_t* search_el = (factory_element_t*)node->data;
+	GtkWidget* w = (GtkWidget*)data;
+	if( search_el->orig_widget == w || search_el->widget == w ) {
+		this_parent = node; // FIXME: not use external variable.
+		return TRUE;
+	}
+	else
+		return FALSE;
+}
+
 GNode*
 tree_find_by_gumbo(GumboNode* node) {
 
@@ -65,6 +83,17 @@ tree_find_by_gumbo(GumboNode* node) {
 
 	g_node_traverse( g_node_get_root(WidgetTree), G_IN_ORDER, G_TRAVERSE_ALL,
 			 -1, find_gumbo, node );
+
+	return this_parent;
+}
+
+GNode*
+tree_find_by_gtk(GtkWidget* w) {
+
+	this_parent = NULL;
+
+	g_node_traverse( g_node_get_root(WidgetTree), G_IN_ORDER, G_TRAVERSE_ALL,
+			 -1, find_gtk, w );
 
 	return this_parent;
 }
@@ -160,8 +189,6 @@ glue_node(GNode* node) {
 		data = g_object_get_data( G_OBJECT(el->widget), "pos" );
 		g_return_if_fail( data != NULL );
 
-		g_print( "%d %d\n", ((guint*)data)[2], ((guint*)data)[3] );
-
 		gtk_grid_attach( GTK_GRID(el->parent_widget), el->widget, ((guint*)data)[1], ((guint*)data)[0],
 				((guint*)data)[2], ((guint*)data)[3] );
 	} else
@@ -170,6 +197,7 @@ glue_node(GNode* node) {
 	return el->widget;
 }
 
+//TODO: newline relative to structural master parent container. eg.: body, div, frame..
 void
 element_create(GumboNode* gumbo_node) {
 	// g_print("implement_node -> %s\n", gumbo_normalized_tagname(gumbo_node->v.element.tag));
@@ -187,7 +215,8 @@ element_create(GumboNode* gumbo_node) {
 		case GUMBO_NODE_ELEMENT:
 			switch(gumbo_node->v.element.tag) {
 				case GUMBO_TAG_TABLE:
-					el->orig_widget = el_table(el);
+					el_table(el);
+					HTMLGtkFactory_newline(/*el*/body_element);
 					break;
 				case GUMBO_TAG_TH:
 				case GUMBO_TAG_TR:
@@ -195,7 +224,6 @@ element_create(GumboNode* gumbo_node) {
 
 					g_return_if_fail( el_tmp != NULL );
 
-					g_print("TR parent is a %s\n", gumbo_normalized_tagname(el_tmp->gumbo_node->v.element.tag) );
 					g_return_if_fail(GTK_IS_GRID( el_tmp->widget ) );
 
 					data = g_object_get_data( G_OBJECT(el_tmp->widget), "last_pos" );
@@ -219,7 +247,7 @@ element_create(GumboNode* gumbo_node) {
 					((guint*)data2)[0] = ((guint*)data)[0];			
 					((guint*)data2)[1] = ((guint*)data)[1];
 
-					el->orig_widget = el_p(el);
+					el_p(el);
 
 					att = gumbo_get_attribute(&gumbo_node->v.element.attributes, "colspan");
 					if( att != NULL )
@@ -260,17 +288,16 @@ element_create(GumboNode* gumbo_node) {
 					}
 					return;
 				case GUMBO_TAG_BODY:
-					doc_body = el_body(el);
-					el->orig_widget = doc_body;
+					el_body(el);
 					body_element = el;
 					HTMLGtkFactory_newline(body_element);
 					break;
 				case GUMBO_TAG_BR:
 					gtk_widget_set_size_request( HTMLGtkFactory_newline(body_element), 
-						1, 12 );
+						1, 24 );
 					return;
 				case GUMBO_TAG_BUTTON:
-					el->orig_widget = el_button(el);
+					el_button(el);
 					break;
 				case GUMBO_TAG_P:	
 				case GUMBO_TAG_H1:
@@ -278,14 +305,18 @@ element_create(GumboNode* gumbo_node) {
 				case GUMBO_TAG_H3:
 				case GUMBO_TAG_H4:
 				case GUMBO_TAG_H5:
-					el->orig_widget = el_p(el);
+					el_p(el);
 					HTMLGtkFactory_newline(/*el*/body_element);
 					break;
+				case GUMBO_TAG_A: //TODO: implement click
 				case GUMBO_TAG_I:
 				case GUMBO_TAG_B:
 				case GUMBO_TAG_STRONG:	
-				case GUMBO_TAG_SMALL:
-					el_text(el);
+				case GUMBO_TAG_SMALL: //FIXME: jinho
+					el_text_base(el);
+					break;
+				case GUMBO_TAG_INPUT:	//TODO: implement 'type' attribute
+					el_input_text(el);
 					break;
 				default:
 					g_warning("unsuported or invalid tag (%s)", gumbo_normalized_tagname(gumbo_node->v.element.tag));
@@ -295,17 +326,21 @@ element_create(GumboNode* gumbo_node) {
 		case GUMBO_NODE_TEXT:
 			el_text(el);
 			break;
+		case GUMBO_NODE_WHITESPACE:
+			// ignored whitespace
+			return;
 		default:
-			g_warning("dafault: unsuported or invalid tag (%s)", gumbo_normalized_tagname(gumbo_node->v.element.tag));
+			g_warning("unsuported or invalid element type (%d)", gumbo_node->type);
 			return;
 	}
 
 	if( gumbo_node->type == GUMBO_NODE_ELEMENT ) {
 		el->type = gumbo_node->v.element.tag;
 		att = gumbo_get_attribute(&gumbo_node->v.element.attributes, "name");
-		if( att != NULL ) {
-			gtk_widget_set_name( GTK_WIDGET(el->widget), att->value ); // set name
-		} else
+//		if( att != NULL ) {
+		if( att == NULL ) // if name is not set -> use tag as name
+//			gtk_widget_set_name( GTK_WIDGET(el->widget), att->value ); // set name
+//		} else
 			gtk_widget_set_name( GTK_WIDGET(el->widget), gumbo_normalized_tagname(gumbo_node->v.element.tag) ); // set default name
 	}	
 	else
@@ -316,10 +351,11 @@ element_create(GumboNode* gumbo_node) {
 	if( (parent != NULL) && (el != body_element) ) {
 		tree_add_node( parent, this_node);
 		el->parent_widget = ((factory_element_t*)parent->data)->widget;
-	
-		element_attributes_read( el );
 		glue_node( this_node );
 	} else
 		tree_add_node( WidgetTree, this_node);
+
+//	if( el->post_create != NULL )
+//		el->post_create(el);
 }
 

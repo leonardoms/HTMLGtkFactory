@@ -12,6 +12,7 @@ el_button(factory_element_t* el) {
 	btn = GTK_WIDGET(gtk_button_new());
 
 	el->widget = btn;
+	el->orig_widget = el->widget;
 
 	return btn;
 }

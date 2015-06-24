@@ -35,3 +35,17 @@
 
 }
 
+#a {
+	color: #0000FF;	
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+*:selected * {
+	color: #FF00FF;
+}
+
+/* debug */
+GtkBox {
+	border: 1px solid red;
+}

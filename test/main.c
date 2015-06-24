@@ -12,12 +12,15 @@ main(int argc, char* argv[]) {
 	GumboOutput* output = gumbo_parse(
 		"<html>"
 		"<head>"
-		"	<link rel=\"stylesheet\" href=\"test/default.css\">"
+		"	<link rel=\"stylesheet\" href=\"resources/master.css\">"
 		"</head>"
 		"<body>"
-		"<h1>Main Heading Topic</h1>"
-		"<h2>This is a Subtopic</h2>"
+		"<h1>The GTK Project</h1>"
+		"<h2>What is GTK+, and how can I use it?</h2>"
 		"<br/>"
+		"GTK+, or the GIMP Toolkit, is a multi-platform toolkit for<br/>"
+		"create <a>graphical user interfaces.</a><br/>"
+		"AFDPA<p>Put your email here: <input></p>Table example:"
 		"<table>"
 		"	<tr>"
 		"		<td></td><td>Col#1</td><td>Col#2</td><td>Col#3</td>"
@@ -31,7 +34,8 @@ main(int argc, char* argv[]) {
 		"	<tr>"
 		"		<td>Row#2</td><td><button>A3</button></td><td><button>B3</button></td>" //<td><button>C3</button></td>"
 		"	</tr>"
-		"</table>"
+		"</table><br/>" // TODO: auto newline after table
+		"<strong>Note:</strong> The progress tag is not supported<br/> in Internet Explorer 9 and earlier versions."
 		"</body>"
 		"</html>" );
 
