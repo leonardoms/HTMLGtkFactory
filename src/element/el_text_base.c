@@ -1,4 +1,5 @@
-#include "HTMLGtkFactory.h"
+
+#include <HTMLGtkFactory.h>
 
 GtkWidget*
 el_text_base(factory_element_t* el) {

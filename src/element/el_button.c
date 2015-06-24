@@ -1,6 +1,5 @@
 
-
-#include "HTMLGtkFactory.h"
+#include <HTMLGtkFactory.h>
 
 GtkWidget*
 el_button(factory_element_t* el) {

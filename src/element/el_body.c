@@ -1,5 +1,5 @@
 
-#include "HTMLGtkFactory.h"
+#include <HTMLGtkFactory.h>
 
 GtkWidget*
 el_body(factory_element_t* el) {

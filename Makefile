@@ -12,7 +12,8 @@ C_SOURCE = 	src/htmlgtk_document.c	\
 		src/element/el_button.c	\
 		src/element/el_table.c	\
 		src/element/element.c	\
-		src/element/el_td.c
+		src/element/el_td.c	\
+		src/js/third/duktape.c
 
 all:
-	cc `pkg-config --libs --cflags gumbo gtk+-3.0` -o main -g -Iinclude/ $(C_SOURCE)
+	cc `pkg-config --libs --cflags gumbo gtk+-3.0` -lm -o main -g -Iinclude/ $(C_SOURCE)

@@ -1,5 +1,5 @@
 
-#include "element.h"
+#include <HTMLGtkFactory.h>
 
 int
 element_attributes_read(factory_element_t* el) {
