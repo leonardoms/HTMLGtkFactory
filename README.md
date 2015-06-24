@@ -9,7 +9,7 @@ HTMLGtkFactory creates GTK Widgets from 'Web-like' HTML/DHMTL layout!
 
 ### Basic Usage
 
-``` 
+```C
 #include <gtk/gtk.h>
 #include <HTMLGtkFactory.h>
 
