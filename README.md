@@ -54,7 +54,7 @@ int main(int argc, char* argv) {
 
 ##### The Output
 
-(test/form.png?raw=true "Output for form.html")
+(http://raw.githubusercontent.com/leonardoms/HTMLGtkFactory/master/test/form.png "Output for form.html")
 
 ### Comming Soon
 
