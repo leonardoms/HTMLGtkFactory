@@ -1,6 +1,11 @@
 # HTMLGtkFactory
 
-HTMLGtkFactory creates GTK Widgets from HTML/DHMTL  layout!
+HTMLGtkFactory creates GTK Widgets from 'Web-like' HTML/DHMTL layout!
+
+### Its userful for
+
+* Easy and Quickly software interface design.
+* Software scripting with interface.
 
 ### Basic Usage
 
@@ -21,3 +26,9 @@ int main(int argc, char* argv) {
 	return 0;
 }
 ``` 
+
+### Comming Soon
+
+* Javascript suport.
+* Callback system in Javascript.
+* Register custom C functions to Javascript context.
