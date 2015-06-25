@@ -56,6 +56,10 @@ int main(int argc, char* argv[]) {
 
 ![](test/form.png?raw=true "Output for form.html")
 
+### Dependencies
+
+* [Gumbo Parser](https://github.com/google/gumbo-parser) library.
+
 ### Comming Soon
 
 * Javascript suport with DOM.
