@@ -45,7 +45,7 @@ int main(int argc, char* argv[]) {
 		</tr>
 		<tr>
 			<td></td>
-			<td><button>Enter</button></td>
+			<td><button onClick="make_login();">Enter</button></td>
 		</tr>
 	</table>	
 </body>
