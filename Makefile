@@ -1,8 +1,8 @@
 
-C_SOURCE = 	src/htmlgtk_document.c	\
+C_SOURCE = 	src/event/ev_onclick.c	\
+		src/htmlgtk_document.c	\
 		src/htmlgtk_factory.c	\
 		test/main.c		\
-		src/process_node.c	\
 		src/element/el_text_base.c	\
 		src/element/el_input.c	\
 		src/element/el_text.c	\
@@ -11,8 +11,8 @@ C_SOURCE = 	src/htmlgtk_document.c	\
 		src/element/property.c	\
 		src/element/el_button.c	\
 		src/element/el_table.c	\
-		src/element/element.c	\
 		src/element/el_td.c	\
+		src/js/run.c		\
 		src/js/third/duktape.c
 
 all:

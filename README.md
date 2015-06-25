@@ -14,7 +14,7 @@ HTMLGtkFactory creates GTK Widgets from 'Web-like' HTML/DHMTL layout! Its *will*
 #include <gtk/gtk.h>
 #include <HTMLGtkFactory.h>
 
-int main(int argc, char* argv) {
+int main(int argc, char* argv[]) {
 
 	HTMLGtkDocument* doc = htmlgtk_document_new_from_file( "test/form.html" );
 
@@ -58,6 +58,6 @@ int main(int argc, char* argv) {
 
 ### Comming Soon
 
-* Javascript suport.
-* Callback system in Javascript.
+* Javascript suport with DOM.
+* HTML element events (OnClick, OnHover, ...)
 * Register custom C functions to Javascript context.

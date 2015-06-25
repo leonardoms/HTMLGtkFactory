@@ -231,6 +231,16 @@ find_parent_table(HTMLGtkDocument* doc, GumboNode* node) {
 
 }
 
+
+void
+htmlgtk_document_event_create(HTMLGtkDocument* doc, factory_element_t* el) {
+
+	if( g_object_get_data(G_OBJECT(el->orig_widget), "htmlgtk_onclick" ) != NULL )
+		g_signal_connect( G_OBJECT(el->orig_widget), "clicked", G_CALLBACK(ev_onclick), el ); //FIXME: 'clicked' only works with buttons
+		
+
+}
+
 GtkWidget*
 glue_node(HTMLGtkDocument* doc, GNode* node) {
 
@@ -380,13 +390,19 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 				case GUMBO_TAG_INPUT:	//TODO: implement 'type' attribute
 					el_input_text(el);
 					break;
+				case GUMBO_TAG_SCRIPT:
+					return;	// do nothing here
 				default:
 					g_warning("unsuported or invalid tag (%s)", gumbo_normalized_tagname(gumbo_node->v.element.tag));
 					return;
 			}
 			break;
 		case GUMBO_NODE_TEXT:
-			el_text(el);
+			if( el->gumbo_node->parent->type == GUMBO_NODE_ELEMENT )
+			if( el->gumbo_node->parent->v.element.tag == GUMBO_TAG_SCRIPT )
+				htmlgtk_script_run_string( doc, el->gumbo_node->v.text.text ); // run script
+			else
+				el_text(el); // print text
 			break;
 		case GUMBO_NODE_WHITESPACE:
 			// ignored whitespace
@@ -396,8 +412,11 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 			return;
 	}
 
+	g_object_set_data( G_OBJECT(el->orig_widget), "htmlgtkdocument", (gpointer)doc );
+
 	if( gumbo_node->type == GUMBO_NODE_ELEMENT ) {
 		el->type = gumbo_node->v.element.tag;
+		htmlgtk_element_attributes_read(el);
 		att = gumbo_get_attribute(&gumbo_node->v.element.attributes, "name");
 //		if( att != NULL ) {
 		if( att == NULL ) // if name is not set -> use tag as name
@@ -416,6 +435,8 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 		glue_node( doc, this_node );
 	} else
 		tree_add_node( doc, doc->tree, this_node);
+
+	htmlgtk_document_event_create( doc, el );
 
 }
 

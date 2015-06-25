@@ -2,7 +2,7 @@
 #include <HTMLGtkFactory.h>
 
 int
-element_attributes_read(factory_element_t* el) {
+htmlgtk_element_attributes_read(factory_element_t* el) {
 
 	gpointer	prop;
 	gpointer	name;
@@ -17,8 +17,6 @@ element_attributes_read(factory_element_t* el) {
 			prop = g_strdup_printf( "%s", att->value );
 			name = g_strdup_printf( "htmlgtk_%s", att->name );
 			g_object_set_data( G_OBJECT(el->orig_widget), name, prop ); // save property
-			g_free(prop);
-			g_free(name);
 		}
 	}
 
