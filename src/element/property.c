@@ -2,7 +2,7 @@
 #include <HTMLGtkFactory.h>
 
 int
-htmlgtk_element_attributes_read(factory_element_t* el) {
+htmlgtk_element_attributes_read(htmlgtk_element_t* el) {
 
 	gpointer	prop;
 	gpointer	name;

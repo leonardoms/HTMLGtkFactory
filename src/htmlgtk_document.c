@@ -8,9 +8,25 @@ htmlgtk_document_new() {
 	doc->js_context = duk_create_heap_default();
 	g_return_val_if_fail( doc->js_context != NULL, NULL );
 
-	doc->tree = g_node_new(g_malloc0(sizeof(factory_element_t)));
+	doc->tree = g_node_new(g_malloc0(sizeof(htmlgtk_element_t)));
 
-//TODO: load style from resource 'master.css'
+	GBytes* res_mastercss = g_resources_lookup_data("/htmlgtk/master.css", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+
+	if(res_mastercss != NULL) {
+		GtkCssProvider *css = gtk_css_provider_get_default();
+		GdkDisplay *display = gdk_display_get_default ();
+		GdkScreen *screen = gdk_display_get_default_screen (display);
+		gsize	sz;
+		gpointer css_data = g_bytes_get_data(res_mastercss, &sz);
+
+		gtk_style_context_add_provider_for_screen (screen,
+					GTK_STYLE_PROVIDER (css),
+					GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+		gtk_css_provider_load_from_data(GTK_CSS_PROVIDER(css),css_data, sz, NULL);
+	} else {
+		g_warning("htmlgtk_document_new() fails loading default style.");
+	}
 
 	return doc;
 }
@@ -36,7 +52,7 @@ htmlgtk_document_new_from_string(const gchar* str) {
 
 HTMLGtkDocument*
 htmlgtk_document_new_from_file(const gchar* file) {
-	
+
 	gchar* str;
 	gsize length;
 
@@ -49,14 +65,14 @@ htmlgtk_document_new_from_file(const gchar* file) {
 
 GtkWidget*
 htmlgtk_document_get_body(HTMLGtkDocument* doc) {
-	g_return_val_if_fail( doc != NULL, NULL ); 
+	g_return_val_if_fail( doc != NULL, NULL );
 	g_return_val_if_fail( doc->body != NULL, NULL );
 
 	return doc->body->orig_widget;
 }
 
 GtkWidget*
-htmlgtk_document_newline(HTMLGtkDocument* doc, factory_element_t* el) {
+htmlgtk_document_newline(HTMLGtkDocument* doc, htmlgtk_element_t* el) {
 	GtkWidget* nl = GTK_WIDGET(gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5));
 
 	g_return_val_if_fail( GTK_IS_BOX(el->orig_widget), NULL );
@@ -75,7 +91,7 @@ void	htmlgtk_document_process_node(HTMLGtkDocument* doc, GumboNode* node, int ba
 
 	if( node != NULL )
 	if( node->type != GUMBO_NODE_DOCUMENT ) {
-		if( !back ) 
+		if( !back )
 			htmlgtk_document_element_create(doc, node); // process node!
 
 		if( node->type != GUMBO_NODE_TEXT && node->type != GUMBO_NODE_WHITESPACE &&
@@ -115,7 +131,7 @@ tree_add_node(HTMLGtkDocument* doc, GNode* parent, GNode* node) {
 gboolean
 find_gumbo(GNode *node, gpointer data) {
 
-	factory_element_t* search_el = (factory_element_t*)node->data;
+	htmlgtk_element_t* search_el = (htmlgtk_element_t*)node->data;
 	GumboNode* gumbo_node = (GumboNode*)data;
 	if( search_el->gumbo_node == gumbo_node ) {
 		this_parent = node; // FIXME: not use external variable.
@@ -128,7 +144,7 @@ find_gumbo(GNode *node, gpointer data) {
 gboolean
 find_gtk(GNode *node, gpointer data) {
 
-	factory_element_t* search_el = (factory_element_t*)node->data;
+	htmlgtk_element_t* search_el = (htmlgtk_element_t*)node->data;
 	GtkWidget* w = (GtkWidget*)data;
 	if( search_el->orig_widget == w || search_el->widget == w ) {
 		this_parent = node; // FIXME: not use external variable.
@@ -160,17 +176,17 @@ tree_find_by_gtk(HTMLGtkDocument* doc, GtkWidget* w) {
 	return this_parent;
 }
 
-factory_element_t*
+htmlgtk_element_t*
 find_parent_container(HTMLGtkDocument* doc, GNode* node) {
 
 	GNode* p;
-	factory_element_t* el;
+	htmlgtk_element_t* el;
 
 	g_return_val_if_fail( node != NULL, NULL );
 
 	p = node->parent;
 	while( p ) {
-		el = (factory_element_t*)p->data;
+		el = (htmlgtk_element_t*)p->data;
 		if( GTK_IS_CONTAINER(el->widget) )
 			return el;
 		p = p->parent;
@@ -180,11 +196,11 @@ find_parent_container(HTMLGtkDocument* doc, GNode* node) {
 
 }
 
-factory_element_t*
+htmlgtk_element_t*
 find_parent_container_by_gumbo(HTMLGtkDocument* doc, GumboNode* node) {
 
 	GNode* p;
-	factory_element_t* el;
+	htmlgtk_element_t* el;
 
 	g_return_val_if_fail( node != NULL, NULL );
 
@@ -194,7 +210,7 @@ find_parent_container_by_gumbo(HTMLGtkDocument* doc, GumboNode* node) {
 
 	//p = p->parent;
 	while( p ) {
-		el = (factory_element_t*)p->data;
+		el = (htmlgtk_element_t*)p->data;
 		if( GTK_IS_CONTAINER(el->widget) )
 			return el;
 		p = p->parent;
@@ -204,11 +220,11 @@ find_parent_container_by_gumbo(HTMLGtkDocument* doc, GumboNode* node) {
 
 }
 
-factory_element_t*
+htmlgtk_element_t*
 find_parent_table(HTMLGtkDocument* doc, GumboNode* node) {
 
 	GNode* p;
-	factory_element_t* el;
+	htmlgtk_element_t* el;
 	GumboNode*	gn;
 
 	g_return_val_if_fail( node != NULL, NULL );
@@ -221,7 +237,7 @@ find_parent_table(HTMLGtkDocument* doc, GumboNode* node) {
 		if( gn->v.element.tag == GUMBO_TAG_TABLE ) {
 			p = tree_find_by_gumbo(doc, gn);
 			g_return_val_if_fail(p != NULL, NULL);
-			el = (factory_element_t*)p->data;
+			el = (htmlgtk_element_t*)p->data;
 			return el;
 		}
 		gn = gn->parent;
@@ -231,25 +247,24 @@ find_parent_table(HTMLGtkDocument* doc, GumboNode* node) {
 
 }
 
-
 void
-htmlgtk_document_event_create(HTMLGtkDocument* doc, factory_element_t* el) {
+htmlgtk_document_event_create(HTMLGtkDocument* doc, htmlgtk_element_t* el) {
 
 	if( g_object_get_data(G_OBJECT(el->orig_widget), "htmlgtk_onclick" ) != NULL )
 		g_signal_connect( G_OBJECT(el->orig_widget), "clicked", G_CALLBACK(ev_onclick), el ); //FIXME: 'clicked' only works with buttons
-		
+
 
 }
 
 GtkWidget*
 glue_node(HTMLGtkDocument* doc, GNode* node) {
 
-	factory_element_t* el_container = find_parent_container(doc, node);
-	factory_element_t* el;
+	htmlgtk_element_t* el_container = find_parent_container(doc, node);
+	htmlgtk_element_t* el;
 
 	g_return_val_if_fail( el_container != NULL || GTK_IS_WIDGET(el->widget) == FALSE, NULL );
 
-	el = (factory_element_t*)node->data;
+	el = (htmlgtk_element_t*)node->data;
 
 	if( GTK_IS_BOX(el->parent_widget) ) {
 		gtk_box_pack_start(GTK_BOX(el->parent_widget), el->widget, FALSE, FALSE, 0);
@@ -273,11 +288,11 @@ glue_node(HTMLGtkDocument* doc, GNode* node) {
 void
 htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 	// g_print("implement_node -> %s\n", gumbo_normalized_tagname(gumbo_node->v.element.tag));
-	factory_element_t* el = g_malloc0(sizeof(factory_element_t));
-	factory_element_t* el_tmp;
+	htmlgtk_element_t* el = g_malloc0(sizeof(htmlgtk_element_t));
+	htmlgtk_element_t* el_tmp;
 	GNode *parent, *this_node;
 	GumboAttribute* att;
-	gpointer	data, data2;	
+	gpointer	data, data2;
 	GtkWidget*	widget;
 
 	el->gumbo_node = gumbo_node;
@@ -315,8 +330,8 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 					g_return_if_fail( data != NULL );
 
 					// save TD position
-					data2 = g_malloc0( sizeof(guint)*4 );	// top, left, xspan, yspan	
-					((guint*)data2)[0] = ((guint*)data)[0];			
+					data2 = g_malloc0( sizeof(guint)*4 );	// top, left, xspan, yspan
+					((guint*)data2)[0] = ((guint*)data)[0];
 					((guint*)data2)[1] = ((guint*)data)[1];
 
 					el_p(el);
@@ -354,8 +369,8 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 											GTK_STYLE_PROVIDER_PRIORITY_USER);
 
 								gtk_css_provider_load_from_path(GTK_CSS_PROVIDER(css), att->value, NULL);
-											
-							}							
+
+							}
 						}
 					}
 					return;
@@ -365,13 +380,13 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 					htmlgtk_document_newline(doc, doc->body);
 					break;
 				case GUMBO_TAG_BR:
-					gtk_widget_set_size_request( htmlgtk_document_newline(doc, doc->body), 
+					gtk_widget_set_size_request( htmlgtk_document_newline(doc, doc->body),
 						1, 24 );
 					return;
 				case GUMBO_TAG_BUTTON:
 					el_button(el);
 					break;
-				case GUMBO_TAG_P:	
+				case GUMBO_TAG_P:
 				case GUMBO_TAG_H1:
 				case GUMBO_TAG_H2:
 				case GUMBO_TAG_H3:
@@ -383,7 +398,7 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 				case GUMBO_TAG_A: //TODO: implement click
 				case GUMBO_TAG_I:
 				case GUMBO_TAG_B:
-				case GUMBO_TAG_STRONG:	
+				case GUMBO_TAG_STRONG:
 				case GUMBO_TAG_SMALL: //FIXME: jinho
 					el_text_base(el);
 					break;
@@ -423,7 +438,7 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 //			gtk_widget_set_name( GTK_WIDGET(el->widget), att->value ); // set name
 //		} else
 			gtk_widget_set_name( GTK_WIDGET(el->widget), gumbo_normalized_tagname(gumbo_node->v.element.tag) ); // set default name
-	}	
+	}
 	else
 		el->type = 0xFFFF;
 
@@ -431,7 +446,7 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 
 	if( (parent != NULL) && (el != doc->body) ) {
 		tree_add_node( doc, parent, this_node);
-		el->parent_widget = ((factory_element_t*)parent->data)->widget;
+		el->parent_widget = ((htmlgtk_element_t*)parent->data)->widget;
 		glue_node( doc, this_node );
 	} else
 		tree_add_node( doc, doc->tree, this_node);
@@ -439,5 +454,3 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 	htmlgtk_document_event_create( doc, el );
 
 }
-
-

@@ -2,7 +2,7 @@
 #include <HTMLGtkFactory.h>
 
 GtkWidget*
-el_button(factory_element_t* el) {
+el_button(htmlgtk_element_t* el) {
 
 	GtkWidget *btn;
 

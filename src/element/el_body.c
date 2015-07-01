@@ -2,7 +2,7 @@
 #include <HTMLGtkFactory.h>
 
 GtkWidget*
-el_body(factory_element_t* el) {
+el_body(htmlgtk_element_t* el) {
 
 	GtkWidget* body = GTK_WIDGET(gtk_box_new(GTK_ORIENTATION_VERTICAL, 5));
 

@@ -2,7 +2,7 @@
 #include <HTMLGtkFactory.h>
 
 GtkWidget*
-el_text(factory_element_t* el) {
+el_text(htmlgtk_element_t* el) {
 
 	GtkWidget *text, *container;
 

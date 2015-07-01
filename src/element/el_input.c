@@ -2,7 +2,7 @@
 #include <HTMLGtkFactory.h>
 
 GtkWidget*
-el_input_text(factory_element_t* el) {
+el_input_text(htmlgtk_element_t* el) {
 
 	GtkWidget *entry;
 

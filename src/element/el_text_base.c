@@ -2,7 +2,7 @@
 #include <HTMLGtkFactory.h>
 
 GtkWidget*
-el_text_base(factory_element_t* el) {
+el_text_base(htmlgtk_element_t* el) {
 	GtkWidget *text_base;
 
 	g_return_val_if_fail( el->gumbo_node->type = GUMBO_NODE_ELEMENT, NULL );
