@@ -1,17 +1,5 @@
 #include <HTMLGtkFactory.h>
 
-duk_ret_t my_c_getter(duk_context *ctx) {
-	g_print("C_GETTER for property: %s\n", duk_get_string(ctx, -2));
-	duk_push_uint(ctx, 54321);
-	return 1;
-}
-
-duk_ret_t my_c_setter(duk_context *ctx) {
-	g_print("C_SETTER\n");// for property: %s\n", duk_get_string(ctx, -2));
-
-	return 0;
-}
-
 HTMLGtkDocument*
 htmlgtk_document_new() {
 
