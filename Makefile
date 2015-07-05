@@ -1,5 +1,7 @@
 
 C_SOURCE = 	src/event/ev_onclick.c	\
+		src/js/DOM/document.c	\
+		src/js/DOM/element.c	\
 		src/htmlgtk_document.c	\
 		src/htmlgtk_factory.c	\
 		test/main.c		\

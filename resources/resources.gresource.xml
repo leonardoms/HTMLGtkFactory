@@ -2,6 +2,6 @@
 <gresources>
   <gresource prefix="/htmlgtk">
     <file>master.css</file>
-<!--    <file>resources/alert.html</file> -->
+    <file>htmlgtk_core.js</file>
   </gresource>
 </gresources>

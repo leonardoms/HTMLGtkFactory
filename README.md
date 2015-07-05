@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
 
 	return 0;
 }
-``` 
+```
 
 ##### The HTML Layout
 ```html
@@ -45,9 +45,12 @@ int main(int argc, char* argv[]) {
 		</tr>
 		<tr>
 			<td></td>
-			<td><button onClick="make_login();">Enter</button></td>
+			<td><button id="loginBtn" name="Foo" onClick="make_login();">Enter</button></td>
 		</tr>
-	</table>	
+	</table>
+	<script type="text/javascript">
+		print('button name is -> ' + document.getElementById('loginBtn').name);
+	</script>
 </body>
 </html>
 ```
@@ -55,6 +58,12 @@ int main(int argc, char* argv[]) {
 ##### The Output
 
 ![](test/form.png?raw=true "Output for form.html")
+
+and on terminal prints:
+
+```
+user@htmlgtk-pc~$ button name is -> Foo
+```
 
 ### Dependencies
 

@@ -1,9 +1,23 @@
 #include <HTMLGtkFactory.h>
 
+duk_ret_t my_c_getter(duk_context *ctx) {
+	g_print("C_GETTER for property: %s\n", duk_get_string(ctx, -2));
+	duk_push_uint(ctx, 54321);
+	return 1;
+}
+
+duk_ret_t my_c_setter(duk_context *ctx) {
+	g_print("C_SETTER\n");// for property: %s\n", duk_get_string(ctx, -2));
+
+	return 0;
+}
+
 HTMLGtkDocument*
 htmlgtk_document_new() {
 
 	HTMLGtkDocument* doc = g_malloc0(sizeof(HTMLGtkDocument));
+
+	doc->tree = NULL;
 
 	doc->js_context = duk_create_heap_default();
 	g_return_val_if_fail( doc->js_context != NULL, NULL );
@@ -11,13 +25,13 @@ htmlgtk_document_new() {
 	doc->tree = g_node_new(g_malloc0(sizeof(htmlgtk_element_t)));
 
 	GBytes* res_mastercss = g_resources_lookup_data("/htmlgtk/master.css", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	gsize	sz;
 
 	if(res_mastercss != NULL) {
 		GtkCssProvider *css = gtk_css_provider_get_default();
 		GdkDisplay *display = gdk_display_get_default ();
 		GdkScreen *screen = gdk_display_get_default_screen (display);
-		gsize	sz;
-		gpointer css_data = g_bytes_get_data(res_mastercss, &sz);
+		gpointer css_data = (gpointer)g_bytes_get_data(res_mastercss, &sz);
 
 		gtk_style_context_add_provider_for_screen (screen,
 					GTK_STYLE_PROVIDER (css),
@@ -27,6 +41,35 @@ htmlgtk_document_new() {
 	} else {
 		g_warning("htmlgtk_document_new() fails loading default style.");
 	}
+
+	GBytes* res_corejs = g_resources_lookup_data("/htmlgtk/htmlgtk_core.js", G_RESOURCE_LOOKUP_FLAGS_NONE, NULL);
+	g_return_val_if_fail( res_corejs != NULL, NULL);
+
+	gpointer js_data = (gpointer)g_bytes_get_data(res_corejs, &sz);
+
+//	g_print("eval-> %s", js_data);
+
+	duk_eval_string(doc->js_context, js_data);
+
+	//test
+/*	duk_eval_string(doc->js_context, "htmlgtk_js_object"); // function to create new object (see 'core.js')
+	duk_push_uint(doc->js_context, (guint)doc); // for example //FIXME: change to a JS object
+	duk_push_c_lightfunc(doc->js_context, my_c_getter, 3, 3, 0);
+	duk_push_c_lightfunc(doc->js_context, my_c_setter, 4, 4, 0);
+	duk_call(doc->js_context,3); // run-> htmlgtk_js_object(doc,my_c_getter,my_c_setter);
+
+	// save the new object
+	duk_put_global_string(doc->js_context, "myobj"); // myobj = htmlgtk_js_object(doc,my_c_getter,my_c_setter);
+
+	duk_eval_string(doc->js_context, "myobj.innerHTML = 'test';");
+	duk_eval_string(doc->js_context, "print(myobj.obj_addr);");
+*/
+//  test
+//	duk_eval_string(doc->js_context, "htmlgtk_js_test");
+//	duk_push_string(doc->js_context, "foo");
+//	duk_call(doc->js_context, 1);
+
+	htmlgtk_dom_document_create(doc);
 
 	return doc;
 }
@@ -432,9 +475,9 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 	if( gumbo_node->type == GUMBO_NODE_ELEMENT ) {
 		el->type = gumbo_node->v.element.tag;
 		htmlgtk_element_attributes_read(el);
-		att = gumbo_get_attribute(&gumbo_node->v.element.attributes, "name");
+//		att = gumbo_get_attribute(&gumbo_node->v.element.attributes, "name");
 //		if( att != NULL ) {
-		if( att == NULL ) // if name is not set -> use tag as name
+//		if( att == NULL ) // if name is not set -> use tag as name
 //			gtk_widget_set_name( GTK_WIDGET(el->widget), att->value ); // set name
 //		} else
 			gtk_widget_set_name( GTK_WIDGET(el->widget), gumbo_normalized_tagname(gumbo_node->v.element.tag) ); // set default name

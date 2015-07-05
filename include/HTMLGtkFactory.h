@@ -56,12 +56,17 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node);
 int	// return count of attributes.
 htmlgtk_document_element_attributes_read(htmlgtk_element_t* el);
 
-
 ///////////////////////////
 // Event functions
 //////////////////////////
 
 void
 ev_onclick(GtkButton *sender, gpointer user_data);
+
+void
+htmlgtk_dom_document_create(HTMLGtkDocument* doc);
+
+void
+htmlgtk_dom_element_create(HTMLGtkDocument* doc, htmlgtk_element_t* el);
 
 #endif
