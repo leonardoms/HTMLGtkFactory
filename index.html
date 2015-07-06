@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="HTMLGTK : C Library to create GTK Interface from dynamic HTML document">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>HTMLGTK</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/leonardoms/HTMLGtkFactory">View on GitHub</a>
+
+          <h1 id="project_title">HTMLGTK</h1>
+          <h2 id="project_tagline">C Library to create GTK Interface from dynamic HTML document</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/leonardoms/HTMLGtkFactory/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/leonardoms/HTMLGtkFactory/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="htmlgtkfactory" class="anchor" href="#htmlgtkfactory" aria-hidden="true"><span class="octicon octicon-link"></span></a>HTMLGtkFactory</h1>
+
+<p>HTMLGtkFactory creates GTK Widgets from 'Web-like' HTML/DHMTL layout! Its <em>will</em> suport HTML, CSS and Javascript.</p>
+
+<h3>
+<a id="its-userful-for" class="anchor" href="#its-userful-for" aria-hidden="true"><span class="octicon octicon-link"></span></a>Its userful for</h3>
+
+<ul>
+<li>Easy and Quickly software interface design.</li>
+<li>Software scripting with interface.</li>
+</ul>
+
+<h3>
+<a id="basic-usage" class="anchor" href="#basic-usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Basic Usage</h3>
+
+<h5>
+<a id="the-c-code" class="anchor" href="#the-c-code" aria-hidden="true"><span class="octicon octicon-link"></span></a>The C Code</h5>
+
+<div class="highlight highlight-C"><pre>#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>gtk/gtk.h<span class="pl-pds">&gt;</span></span>
+#<span class="pl-k">include</span> <span class="pl-s"><span class="pl-pds">&lt;</span>HTMLGtkFactory.h<span class="pl-pds">&gt;</span></span>
+
+<span class="pl-k">int</span> <span class="pl-en">main</span>(<span class="pl-k">int</span> argc, <span class="pl-k">char</span>* argv[]) {
+
+    HTMLGtkDocument* doc = <span class="pl-c1">htmlgtk_document_new_from_file</span>( <span class="pl-s"><span class="pl-pds">"</span>test/form.html<span class="pl-pds">"</span></span> );
+
+    GtkWidget* wnd = <span class="pl-c1">GTK_WIDGET</span>(<span class="pl-c1">gtk_window_new</span>(GTK_WINDOW_TOPLEVEL));
+    <span class="pl-c1">gtk_container_add</span>( <span class="pl-c1">GTK_CONTAINER</span>(wnd), <span class="pl-c1">htmlgtk_document_get_body</span>(doc) );
+
+    <span class="pl-c1">gtk_widget_show_all</span>(<span class="pl-c1">GTK_WIDGET</span>(wnd));
+    <span class="pl-c1">gtk_main</span>();
+
+    <span class="pl-k">return</span> <span class="pl-c1">0</span>;
+}</pre></div>
+
+<h5>
+<a id="the-html-layout" class="anchor" href="#the-html-layout" aria-hidden="true"><span class="octicon octicon-link"></span></a>The HTML Layout</h5>
+
+<div class="highlight highlight-html"><pre>&lt;<span class="pl-ent">html</span>&gt;
+&lt;<span class="pl-ent">body</span>&gt;
+    &lt;<span class="pl-ent">h3</span>&gt;Login&lt;/<span class="pl-ent">h3</span>&gt;
+    &lt;<span class="pl-ent">br</span>&gt;
+    &lt;<span class="pl-ent">table</span>&gt;
+        &lt;<span class="pl-ent">tr</span>&gt;
+            &lt;<span class="pl-ent">td</span>&gt;Username:&lt;/<span class="pl-ent">td</span>&gt;
+            &lt;<span class="pl-ent">td</span>&gt;&lt;<span class="pl-ent">input</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>uname<span class="pl-pds">"</span></span>/&gt;&lt;/<span class="pl-ent">td</span>&gt;
+        &lt;/<span class="pl-ent">tr</span>&gt;
+        &lt;<span class="pl-ent">tr</span>&gt;
+            &lt;<span class="pl-ent">td</span>&gt;Password:&lt;/<span class="pl-ent">td</span>&gt;
+            &lt;<span class="pl-ent">td</span>&gt;&lt;<span class="pl-ent">input</span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>passwd<span class="pl-pds">"</span></span>/&gt;&lt;/<span class="pl-ent">td</span>&gt;
+        &lt;/<span class="pl-ent">tr</span>&gt;
+        &lt;<span class="pl-ent">tr</span>&gt;
+            &lt;<span class="pl-ent">td</span>&gt;&lt;/<span class="pl-ent">td</span>&gt;
+            &lt;<span class="pl-ent">td</span>&gt;&lt;<span class="pl-ent">button</span> <span class="pl-e">id</span>=<span class="pl-s"><span class="pl-pds">"</span>loginBtn<span class="pl-pds">"</span></span> <span class="pl-e">name</span>=<span class="pl-s"><span class="pl-pds">"</span>Foo<span class="pl-pds">"</span></span> <span class="pl-e">onClick</span>=<span class="pl-s"><span class="pl-pds">"</span>make_login();<span class="pl-pds">"</span></span>&gt;Enter&lt;/<span class="pl-ent">button</span>&gt;&lt;/<span class="pl-ent">td</span>&gt;
+        &lt;/<span class="pl-ent">tr</span>&gt;
+    &lt;/<span class="pl-ent">table</span>&gt;
+<span class="pl-s1">    &lt;<span class="pl-ent">script</span> <span class="pl-e">type</span>=<span class="pl-s"><span class="pl-pds">"</span>text/javascript<span class="pl-pds">"</span></span>&gt;</span>
+<span class="pl-s1">        <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">'</span>button name is -&gt; <span class="pl-pds">'</span></span> <span class="pl-k">+</span> <span class="pl-c1">document</span>.<span class="pl-c1">getElementById</span>(<span class="pl-s"><span class="pl-pds">'</span>loginBtn<span class="pl-pds">'</span></span>).<span class="pl-c1">name</span>);</span>
+<span class="pl-s1">    &lt;/<span class="pl-ent">script</span>&gt;</span>
+&lt;/<span class="pl-ent">body</span>&gt;
+&lt;/<span class="pl-ent">html</span>&gt;</pre></div>
+
+<h5>
+<a id="the-output" class="anchor" href="#the-output" aria-hidden="true"><span class="octicon octicon-link"></span></a>The Output</h5>
+
+<p><img src="http://github.com/leonardoms/HTMLGtkFactory/blob/master/test/form.png?raw=true" alt="" title="Output for form.html"></p>
+
+<p>and on terminal prints:</p>
+
+<pre><code>user@htmlgtk-pc~$ button name is -&gt; Foo
+</code></pre>
+
+<h3>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h3>
+
+<ul>
+<li>
+<a href="https://github.com/google/gumbo-parser">Gumbo Parser</a> library.</li>
+</ul>
+
+<h3>
+<a id="comming-soon" class="anchor" href="#comming-soon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Comming Soon</h3>
+
+<ul>
+<li>Javascript suport with DOM.</li>
+<li>HTML element events (OnClick, OnHover, ...)</li>
+<li>Register custom C functions to Javascript context.</li>
+</ul>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">HTMLGTK maintained by <a href="https://github.com/leonardoms">leonardoms</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+    
+
+  </body>
+</html>
