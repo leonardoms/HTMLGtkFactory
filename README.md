@@ -52,8 +52,9 @@ int main(int argc, char* argv[]) {
 		print('button name is -> ' + document.getElementById('loginBtn').name);
 
 		var inputs = document.getElementsByTagName('input');
-	  for(i = 0; i < inputs.length; i++)
-			print('input#' + i + ' name is ' + inputs[i].name);	</script>
+		for(i = 0; i < inputs.length; i++)
+			print('input#' + i + ' name is ' + inputs[i].name);
+	</script>
 </body>
 </html>
 ```
@@ -65,7 +66,8 @@ int main(int argc, char* argv[]) {
 and on terminal prints:
 
 ```
-user@htmlgtk-pc~$ button name is -> Foo
+user@htmlgtk-pc~$ ./main test/form.html
+button name is -> Foo
 input#0 name is uname
 input#1 name is passwd
 user@htmlgtk-pc~$
