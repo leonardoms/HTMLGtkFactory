@@ -50,7 +50,10 @@ int main(int argc, char* argv[]) {
 	</table>
 	<script type="text/javascript">
 		print('button name is -> ' + document.getElementById('loginBtn').name);
-	</script>
+
+		var inputs = document.getElementsByTagName('input');
+	  for(i = 0; i < inputs.length; i++)
+			print('input#' + i + ' name is ' + inputs[i].name);	</script>
 </body>
 </html>
 ```
@@ -63,6 +66,9 @@ and on terminal prints:
 
 ```
 user@htmlgtk-pc~$ button name is -> Foo
+input#0 name is uname
+input#1 name is passwd
+user@htmlgtk-pc~$
 ```
 
 ### Dependencies
