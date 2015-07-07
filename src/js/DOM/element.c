@@ -11,7 +11,7 @@ duk_ret_t htmlgtk_dom_element_getter(duk_context* js_context) {
   htmlgtk_element_t* el;
   gpointer  el_data;
 
-  gchar* key = duk_get_string(js_context, -2);
+  gchar* key = duk_require_string(js_context, -2);
 
   duk_push_this(js_context); // object
   duk_push_current_function(js_context);
@@ -22,15 +22,12 @@ duk_ret_t htmlgtk_dom_element_getter(duk_context* js_context) {
 
   g_return_val_if_fail(GTK_IS_WIDGET(el->orig_widget), NULL);
 
-  if( !g_strcmp0(key,"name") ) {
-    // push widget 'htmlgtk_name'
-    el_data = g_object_get_data(G_OBJECT(el->orig_widget), "htmlgtk_name");
-   if( el_data != NULL ) {
-      duk_push_string(js_context, g_strdup_printf("%s", el_data));
-    }
-    else {
-      duk_push_null(js_context);
-    }
+ el_data = g_object_get_data(G_OBJECT(el->orig_widget), g_strdup_printf("htmlgtk_%s", key));
+ if( el_data != NULL ) {
+    duk_push_string(js_context, g_strdup_printf("%s", el_data));
+  }
+  else {
+    duk_push_null(js_context);
   }
 
   return 1;
@@ -42,6 +39,9 @@ duk_ret_t htmlgtk_dom_element_setter(duk_context* js_context) {
   // -2 -> value
   // -3 -> key
   // -4 -> target
+  g_print("htmlgtk_dom_element_setter -> [%s %s]\n", duk_require_string(js_context,-2), duk_require_string(js_context,-3));
+
+
   return 0;
 }
 
@@ -63,7 +63,7 @@ htmlgtk_dom_element_create(HTMLGtkDocument* doc, htmlgtk_element_t* el) {
   duk_eval_string(doc->js_context, "htmlgtk_js_object"); // function to create new object (see 'core.js')
 	duk_push_uint(doc->js_context, (guint)el);
 	duk_push_c_function(doc->js_context, htmlgtk_dom_element_getter, 3);
-	duk_push_c_function(doc->js_context, my_c_setter_2, 4);
+	duk_push_c_function(doc->js_context, htmlgtk_dom_element_setter, 4);
 	duk_call(doc->js_context,3);
 
 }

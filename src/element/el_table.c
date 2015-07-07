@@ -5,7 +5,7 @@ GtkWidget*
 el_table(htmlgtk_element_t* el) {
 	GtkWidget *table;
 
-	g_return_val_if_fail( el->gumbo_node->type = GUMBO_NODE_ELEMENT, NULL );
+	g_return_val_if_fail( el->gumbo_node->type == GUMBO_NODE_ELEMENT, NULL );
 
 	table = GTK_WIDGET(gtk_grid_new());
 

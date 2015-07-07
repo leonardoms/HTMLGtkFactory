@@ -463,12 +463,12 @@ htmlgtk_document_element_create(HTMLGtkDocument* doc, GumboNode* gumbo_node) {
 	if( gumbo_node->type == GUMBO_NODE_ELEMENT ) {
 		el->type = gumbo_node->v.element.tag;
 		htmlgtk_element_attributes_read(el);
+		gtk_widget_set_name( GTK_WIDGET(el->orig_widget), gumbo_normalized_tagname(gumbo_node->v.element.tag) ); // set default name
 //		att = gumbo_get_attribute(&gumbo_node->v.element.attributes, "name");
 //		if( att != NULL ) {
 //		if( att == NULL ) // if name is not set -> use tag as name
 //			gtk_widget_set_name( GTK_WIDGET(el->widget), att->value ); // set name
 //		} else
-			gtk_widget_set_name( GTK_WIDGET(el->widget), gumbo_normalized_tagname(gumbo_node->v.element.tag) ); // set default name
 	}
 	else
 		el->type = 0xFFFF;

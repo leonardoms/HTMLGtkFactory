@@ -5,7 +5,7 @@ GtkWidget*
 el_text_base(htmlgtk_element_t* el) {
 	GtkWidget *text_base;
 
-	g_return_val_if_fail( el->gumbo_node->type = GUMBO_NODE_ELEMENT, NULL );
+	g_return_val_if_fail( el->gumbo_node->type == GUMBO_NODE_ELEMENT, NULL );
 
 	text_base = GTK_WIDGET(gtk_box_new(GTK_ORIENTATION_VERTICAL, 0));
 

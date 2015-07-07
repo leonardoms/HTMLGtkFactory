@@ -6,7 +6,7 @@ el_input_text(htmlgtk_element_t* el) {
 
 	GtkWidget *entry;
 
-	g_return_val_if_fail( el->gumbo_node->type = GUMBO_NODE_TEXT, NULL );
+	g_return_val_if_fail( el->gumbo_node->type == GUMBO_NODE_ELEMENT, NULL );
 
 	entry = GTK_WIDGET(gtk_entry_new());
 

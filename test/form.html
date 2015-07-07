@@ -18,6 +18,11 @@
 	</table>
 </body>
 <script type="text/javascript">
-	print(document.getElementById('loginBtn').name);
+	var button = document.getElementById('loginBtn');
+	print(button.name);
+	button.innerHTML = "test";
+	var inputs = document.getElementsByTagName('button');
+	inputs[0].innerHTML = 'TESTE 2';
+	print(inputs[0].name);
 </script>
 </html>

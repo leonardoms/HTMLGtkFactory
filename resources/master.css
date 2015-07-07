@@ -6,9 +6,9 @@
 	font-size: 20px;
 }
 
-
 #h3 {
 	font-size: 16px;
+	display: none;
 }
 
 #h4 {
@@ -19,15 +19,15 @@
 	font-size: 8px;
 }
 
-#small { 
+#small {
     font-size: smaller;
 }
 
-#strong, #b { 
+#strong, #b {
     font-weight: bold;
 }
 
-#i { 
+#i {
     font-style: italic;
 }
 
@@ -36,9 +36,7 @@
 }
 
 #a {
-	color: #0000FF;	
-	text-decoration: underline;
-	cursor: pointer;
+	color: #0000FF;
 }
 
 *:selected * {
