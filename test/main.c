@@ -24,6 +24,8 @@ main(int argc, char* argv[]) {
 	gtk_container_add( GTK_CONTAINER(wnd), scroll );
 	gtk_container_add( GTK_CONTAINER(scroll), htmlgtk_document_get_body(doc) );
 
+	g_signal_connect(G_OBJECT(wnd), "destroy", G_CALLBACK(gtk_main_quit), NULL );
+
 	gtk_widget_show_all(GTK_WIDGET(wnd));
 
 	gtk_main();

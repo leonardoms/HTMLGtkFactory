@@ -1,6 +1,8 @@
 
 #include <HTMLGtkFactory.h>
 
+//TODO: http://www.w3schools.com/jsref/met_document_createelement.asp
+
 typedef struct {
   gchar* param;
   gint   param_i;
@@ -8,6 +10,11 @@ typedef struct {
   HTMLGtkDocument* doc;
   duk_idx_t idx;
 } search_element_t;
+
+void
+htmlgtk_dom_document_createElement(duk_context* js_context) {
+
+}
 
 gboolean
 find_id(GNode *node, gpointer data) {

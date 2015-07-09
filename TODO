@@ -1,0 +1,7 @@
+- create a htmlgtk_document_process_node() based on a target htmlgtk_element_t (not directly "doc->body")
+to be used in functions like element.innerHTML;
+
+- remove gumbo_node from htmlgtk_element_t structure, changes on htmlgtk_document_process_node() are
+necessary. Note that this field is invalid after process all nodes!
+
+- add GtkEventBox to all elements, it will be used for js events;

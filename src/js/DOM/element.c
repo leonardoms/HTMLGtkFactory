@@ -39,6 +39,15 @@ duk_ret_t htmlgtk_dom_element_setter(duk_context* js_context) {
   // -2 -> value
   // -3 -> key
   // -4 -> target
+  const gchar *key, *value;
+  key = g_ascii_strdown(duk_require_string(js_context,-3),-1);
+  value = duk_require_string(js_context,-2);
+
+  if(!g_strcmp0("innerhtml", key)) {
+
+  } else
+    g_warning("unknown or invalid property `%s`.", key);
+
   g_print("htmlgtk_dom_element_setter -> [%s %s]\n", duk_require_string(js_context,-2), duk_require_string(js_context,-3));
 
 
