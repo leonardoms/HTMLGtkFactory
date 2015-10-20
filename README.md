@@ -1,6 +1,10 @@
 # HTMLGtkFactory
 
+(!!!) very very experimental release (!!!)
+
 HTMLGtkFactory creates GTK Widgets from 'Web-like' HTML/DHMTL layout! Its *will* suport HTML, CSS and Javascript.
+
+Want to help? contact me! *leonardo at gpixel.org*
 
 ### Its userful for
 
